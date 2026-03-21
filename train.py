@@ -12,8 +12,8 @@ from model import DogBreedAlexNet
 
 
 # ================= CONFIG =================
-IMAGE_DIR = "/content/train"   # folder chứa ảnh
-CSV_PATH = "/content/labels.csv"
+IMAGE_DIR = "/content/Project_AIL304m_Linh/train"
+CSV_PATH = "/content/Project_AIL304m_Linh/labels.csv"
 
 BATCH_SIZE = 32
 EPOCHS = 5
