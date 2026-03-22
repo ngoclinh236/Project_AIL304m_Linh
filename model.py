@@ -29,7 +29,7 @@ class DogBreedAlexNet(nn.Module):
             nn.Linear(9216, 1024),
             nn.ReLU(),
             nn.Dropout(0.5),
-            nn.Linear(512, num_classes)
+            nn.Linear(1024, num_classes)
         )
 
     def forward(self, x):
