@@ -26,7 +26,7 @@ class DogBreedAlexNet(nn.Module):
 
         self.backbone.classifier = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(in_features, 512),
+            nn.Linear(9216, 1024),
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(512, num_classes)
