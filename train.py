@@ -10,7 +10,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from torchvision import transforms
 
 from dataset import DogBreedTrainValDataset
-from model import DogBreedAlexNet   # (khuyên đổi ResNet bên dưới)
+from model import DogBreedAlexNet  
 
 # ================= CONFIG =================
 IMAGE_DIR = "/content/Project_AIL304m_Linh/train"
@@ -21,7 +21,8 @@ EPOCHS = 20
 LR = 1e-4
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-PATIENCE = 5   
+PATIENCE = 5   # early stopping
+# ==========================================
 
 
 # ===== Load CSV =====
@@ -30,12 +31,12 @@ df = pd.read_csv(CSV_PATH)
 train_df, val_df = train_test_split(df, test_size=0.2, stratify=df["breed"])
 
 
-# ===== Transform =====
+# ===== Transform (mạnh hơn để chống overfit) =====
 transform = transforms.Compose([
-    transforms.RandomResizedCrop(227),
+    transforms.Resize((227, 227)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(20),
-    transforms.ColorJitter(0.2, 0.2, 0.2),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2),
     transforms.ToTensor(),
     transforms.Normalize([0.5]*3, [0.5]*3)
 ])
@@ -57,12 +58,11 @@ num_classes = len(train_dataset.class_to_idx)
 
 model = DogBreedAlexNet(num_classes=num_classes).to(DEVICE)
 
-
 criterion = nn.CrossEntropyLoss()
 
 optimizer = optim.Adam(
     model.parameters(),
-    lr=3e-4,
+    lr=LR,
     weight_decay=1e-4   
 )
 
@@ -90,8 +90,6 @@ for epoch in range(EPOCHS):
         total_loss += loss.item() * images.size(0)
 
     train_loss = total_loss / len(train_loader.dataset)
-
-    print(f"Train Loss: {train_loss:.4f}")
 
     # ===== Validation =====
     model.eval()
@@ -134,13 +132,13 @@ for epoch in range(EPOCHS):
         best_val_loss = val_loss
         counter = 0
         torch.save(model.state_dict(), "best_model.pth")
-        print("✔ Saved best model")
+        print("Saved best model")
     else:
         counter += 1
-        print(f" No improvement ({counter}/{PATIENCE})")
+        print(f"⚠ No improvement ({counter}/{PATIENCE})")
 
         if counter >= PATIENCE:
-            print(" Early stopping triggered")
+            print("Early stopping triggered")
             break
 
 
