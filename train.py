@@ -32,7 +32,7 @@ train_df, val_df = train_test_split(df, test_size=0.2, stratify=df["breed"])
 
 # ===== Transform =====
 transform = transforms.Compose([
-    transforms.ResizedCrop((227)),
+    transforms.RandomResizedCrop(227),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(20),
     transforms.ColorJitter(0.2, 0.2, 0.2),
