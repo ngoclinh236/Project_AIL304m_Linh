@@ -32,10 +32,10 @@ train_df, val_df = train_test_split(df, test_size=0.2, stratify=df["breed"])
 
 # ===== Transform =====
 transform = transforms.Compose([
-    transforms.Resize((227, 227)),
+    transforms.ResizedCrop((227)),
     transforms.RandomHorizontalFlip(),
     transforms.RandomRotation(20),
-    transforms.ColorJitter(brightness=0.2, contrast=0.2),
+    transforms.ColorJitter(0.2, 0.2, 0.2),
     transforms.ToTensor(),
     transforms.Normalize([0.5]*3, [0.5]*3)
 ])
@@ -62,8 +62,8 @@ criterion = nn.CrossEntropyLoss()
 
 optimizer = optim.Adam(
     model.parameters(),
-    lr=LR,
-    weight_decay=1e-4   # chống overfit
+    lr=3e-4,
+    weight_decay=1e-4   
 )
 
 
@@ -137,7 +137,7 @@ for epoch in range(EPOCHS):
         print("✔ Saved best model")
     else:
         counter += 1
-        print(f"⚠ No improvement ({counter}/{PATIENCE})")
+        print(f" No improvement ({counter}/{PATIENCE})")
 
         if counter >= PATIENCE:
             print(" Early stopping triggered")
