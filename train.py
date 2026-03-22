@@ -16,7 +16,7 @@ IMAGE_DIR = "/content/Project_AIL304m_Linh/train"
 CSV_PATH = "/content/Project_AIL304m_Linh/labels.csv"
 
 BATCH_SIZE = 32
-EPOCHS = 5
+EPOCHS = 30
 LR = 1e-4
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # ==========================================
