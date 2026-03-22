@@ -13,13 +13,24 @@ class DogBreedAlexNet(nn.Module):
 
         self.backbone = models.alexnet(weights=weights)
 
-        # sửa classifier
-        in_features = self.backbone.classifier[6].in_features
-        self.backbone.classifier[6] = nn.Linear(in_features, num_classes)
-
-        # freeze feature extractor
-        for param in self.backbone.features.parameters():
+        # ===== Freeze phần đầu =====
+        for param in self.backbone.features[:6].parameters():
             param.requires_grad = False
+
+        # ===== Unfreeze phần sau =====
+        for param in self.backbone.features[6:].parameters():
+            param.requires_grad = True
+
+        # =====classifier =====
+        in_features = self.backbone.classifier[6].in_features
+
+        self.backbone.classifier = nn.Sequential(
+            nn.Dropout(0.5),
+            nn.Linear(in_features, 512),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(512, num_classes)
+        )
 
     def forward(self, x):
         return self.backbone(x)
