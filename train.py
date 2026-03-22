@@ -91,6 +91,8 @@ for epoch in range(EPOCHS):
 
     train_loss = total_loss / len(train_loader.dataset)
 
+    print(f"Train Loss: {train_loss:.4f}")
+
     # ===== Validation =====
     model.eval()
     val_loss = 0
